@@ -136894,6 +136894,9 @@ var Company = /** @class */function () {
       longitude: parseFloat(faker_1.default.address.longitude())
     };
   }
+  Company.prototype.markerContent = function () {
+    return "\n        <h1>".concat(this.companyName, "</h1>\n        <br>\n        <h3>").concat(this.catchPhrase, "</h3>\n        ");
+  };
   return Company;
 }();
 exports.Company = Company;
@@ -136915,12 +136918,20 @@ var CustomMap = /** @class */function () {
     });
   }
   CustomMap.prototype.addMarker = function (mappable) {
-    new google.maps.Marker({
+    var _this = this;
+    var marker = new google.maps.Marker({
       map: this.googleMap,
       position: {
         lat: mappable.location.latitude,
         lng: mappable.location.longitude
       }
+    });
+    // Popup window.
+    marker.addListener('click', function () {
+      var infoWindow = new google.maps.InfoWindow({
+        content: mappable.markerContent()
+      });
+      infoWindow.open(_this.googleMap, marker);
     });
   };
   return CustomMap;
@@ -136951,6 +136962,9 @@ var User = /** @class */function () {
       longitude: parseFloat(faker_1.default.address.longitude())
     };
   }
+  User.prototype.markerContent = function () {
+    return "User name is ".concat(this.name);
+  };
   return User;
 }();
 exports.User = User;
@@ -136993,7 +137007,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "49590" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "49655" + '/');
   ws.onmessage = function (event) {
     checkedAssets = {};
     assetsToAccept = [];

@@ -2,11 +2,12 @@
 /* We only accept objects with the shape of Mappable in our map function. 
   This way we restrict the type of classes that can be accepted, additionally we do not narrow the function to use only User and Company model as more classes Model can be accepted.
  */
-interface Mappable {
+export interface Mappable {
     location: {
         latitude: number,
         longitude: number;
     };
+    markerContent: () => string;
 }
 
 export class CustomMap {
@@ -23,12 +24,19 @@ export class CustomMap {
     }
 
     addMarker( mappable: Mappable ): void {
-        new google.maps.Marker( {
+        const marker = new google.maps.Marker( {
             map: this.googleMap,
             position: {
                 lat: mappable.location.latitude,
                 lng: mappable.location.longitude
             }
+        } );
+        // Popup window.
+        marker.addListener( 'click', () => {
+            const infoWindow = new google.maps.InfoWindow( {
+                content: mappable.markerContent()
+            } );
+            infoWindow.open( this.googleMap, marker );
         } );
     }
 }
